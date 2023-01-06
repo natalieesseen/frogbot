@@ -6,7 +6,7 @@ const { token } = require('./config.json');
 // create new client instance
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-// retrieve command files
+// retrieve event files
 const eventsPath = path.join(__dirname, 'events');
 const eventFiles = fs.readdirSync(eventsPath).filter(file => file.endsWith('.js'));
 
