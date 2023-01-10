@@ -7,9 +7,7 @@ module.exports = {
 		.setDescription('Pet the frog 🐸'),
 	async execute(interaction) {
         let getUser = await User.findOne({ where: { id: interaction.user.id }});
-        if (!getUser) {
-            getUser = await User.create({ id: interaction.user.id, balance: 0 })
-        };
+        if (!getUser) { getUser = await User.create({ id: interaction.user.id, balance: 0 }) };
 
         let coinsEarned = Math.floor(Math.random() * 51);
 
@@ -20,7 +18,8 @@ module.exports = {
 
         let embed = new EmbedBuilder()
             .setColor('93C98F')
-            .setDescription(`Forg says "Thank you for the pets" and gives you ${coinsEarned} coins in return. Ribbit. 🐸`);
+            .setTitle('Thank you for the pets!')
+            .setDescription(`Forg gives you ${coinsEarned} coins in return 🐸`);
 
 		await interaction.reply({ embeds: [embed]});
 	},
