@@ -46,3 +46,12 @@ module.exports.CurrencyShop = database.define('currency_shop', {
         timestamps: false,
     }
 );
+
+module.exports.petCooldown = database.define('pet_cooldown', {
+    user_id: {
+        primaryKey: true,
+        type: Sequelize.STRING,
+        unique: true,
+    },
+    expiry: Sequelize.BIGINT,
+})
