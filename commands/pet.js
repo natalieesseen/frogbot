@@ -10,10 +10,7 @@ module.exports = {
         let getUser = await User.findOne({ where: { id: interaction.user.id }});
         if (!getUser) { getUser = await User.create({ id: interaction.user.id, balance: 0 }) };
 
-        let getCooldown = await petCooldown.findOne({
-            where: { user_id: interaction.user.id },
-        })
-
+        let getCooldown = await petCooldown.findOne({ where: { user_id: interaction.user.id } })
         let cooldownTime = getCooldown?.expiry;
 
         if (getCooldown && cooldownTime > new Date().getTime()) {
