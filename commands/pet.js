@@ -14,7 +14,7 @@ module.exports = {
             where: { user_id: interaction.user.id },
         })
 
-        let cooldownTime = getCooldown.expiry;
+        let cooldownTime = getCooldown?.expiry;
 
         if (getCooldown && cooldownTime > new Date().getTime()) {
             let cooldownEmbed = new EmbedBuilder()
