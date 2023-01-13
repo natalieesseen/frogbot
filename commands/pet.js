@@ -24,12 +24,12 @@ module.exports = {
             .catch((err) => {})
         }
 
-        await petCooldown.create({
+        petCooldown.create({
             user_id: interaction.user.id,
             expiry: new Date().getTime() + 3600000,
         })
 
-        if (getCooldown) { getCooldown.destroy({ where: { user_id: interaction.user.id }}) }
+        if (getCooldown) { petCooldown.destroy({ where: { user_id: interaction.user.id }}) }
         
         let coinsEarned = Math.floor(Math.random() * 51);
 
