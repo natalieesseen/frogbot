@@ -222,7 +222,7 @@ module.exports = {
                             addButtons = true;
                         }
                     break;
-                    case '🍄 ':
+                    case '🍄':
                         if (response.id === 12) {
                             embed.setFields([
                                 {
