@@ -1,4 +1,5 @@
 const { Events, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
+const { User } = require('../database');
 
 // listener for adventure buttons
 module.exports = {
@@ -7,6 +8,11 @@ module.exports = {
         if(interaction.isButton()){
             let choice = interaction.customId;
             let commandUser = interaction.user.id;
+
+            let coins = Math.floor(Math.random() * 101);
+            let getUser = await User.findOne({ where: { id: interaction.user.id }});
+            if (!getUser) { getUser = await User.create({ id: interaction.user.id, balance: 0 }) };
+
             let responses = {
                 '🏕️': [
                     { id: 1, text: "As the night goes on, you wait for Frog to return... But he never does. This adventure was short-lived." },
@@ -63,12 +69,12 @@ module.exports = {
                 ],
                 '👋':
                 [
-                    { id: 23, text: "You pet the cat. The cat decides to bite your hand and steal coins. Oof." },
-                    { id: 24, text: "You pet the cat. The cat likes it! The cat leads you to a hidden burrow. Inside you find coins! The cat leads you back to camp where Frog is waiting. You show him your finds! Very cool!" } 
+                    { id: 23, text: "You pet the cat. The cat decides to bite your hand and runs away. Oof." },
+                    { id: 24, text: `You pet the cat. The cat likes it! The cat leads you to a hidden burrow. Inside you find ${coins} coins! The cat leads you back to camp where Frog is waiting. You show him your finds! Very cool!` } 
                 ],
                 '🐈':
                 [
-                    { id: 25, text: "The cat leads you back to camp where you find Frog waiting. Frog is a bit disappointed you went on an adventure without him. You give Frog coins as an apology." },
+                    { id: 25, text: `The cat leads you back to camp where you find Frog waiting. Frog is a bit disappointed you went on an adventure without him. You give Frog ${coins} coins as an apology.` },
                     { id: 26, text: "You decide to run. You arrive at a magical pond. What do you do?" } 
                 ],
                 '🥤':
@@ -78,18 +84,18 @@ module.exports = {
                 ],
                 '🧚':
                 [
-                    { id: 29, text: "You attempt to summon the fairy like you've seen in games and movies. The forest spirits are offended by your pathetic attempts and steals coins from your pockets." },
-                    { id: 30, text: "You leave a prayer for the fairy and the forest spirits. They reward you with coins. You head back to camp where you find Frog safe and sound!" } 
+                    { id: 29, text: `You attempt to summon the fairy like you've seen in games and movies. The forest spirits are offended by your pathetic attempts and steals ${coins} coins from your pockets.` },
+                    { id: 30, text: `You leave a prayer for the fairy and the forest spirits. They reward you with ${coins} coins. You head back to camp where you find Frog safe and sound!` } 
                 ],
                 '🔪':
                 [
-                    { id: 31, text: "You attempt to stab the shrimp but you fail. Pathetic. Shrimp steals coins and runs away." },
-                    { id: 32, text: "You stab the shrimp. Grim. At least you saved Frog. Frog gives you some coins as a reward, and the two of you head back to camp." }                    
+                    { id: 31, text: `You attempt to stab the shrimp but you fail. Pathetic. Shrimp steals ${coins} coins and runs away.` },
+                    { id: 32, text: `You stab the shrimp. Grim. At least you saved Frog. Frog gives you ${coins} coins as a reward, and the two of you head back to camp.` }                    
                 ],
                 '🎣':
                 [
-                    { id: 33, text: "You attempt to catch the shrimp. You fail. Somehow. Shrimpy steals coins and runs away." },
-                    { id: 34, text: "You successfully catch the shrimp! Good job? I guess? At least you saved Frog! Frog rewards you with some coins, and the two of you head back to camp." } 
+                    { id: 33, text: `You attempt to catch the shrimp. You fail. Somehow. Shrimpy steals ${coins} coins and runs away.` },
+                    { id: 34, text: `You successfully catch the shrimp! Good job? I guess? At least you saved Frog! Frog rewards you with some ${coins} coins, and the two of you head back to camp.` } 
                 ]
 
             }
@@ -99,6 +105,20 @@ module.exports = {
             let addButtons = false;
             let random = Math.floor(Math.random() * responses[choice].length)
             let response = responses[choice][random];
+
+            function addCoins() {
+                getUser.update(
+                    { balance: getUser.balance + coins },
+                    { where: { id: interaction.user.id }}
+                )
+            }
+
+            function subCoins() {
+                getUser.update(
+                    { balance: getUser.balance - coins },
+                    { where: { id: interaction.user.id }}
+                )
+            }
 
             let embed = new EmbedBuilder()
             .setColor("93C98F")
@@ -297,7 +317,15 @@ module.exports = {
                             addButtons = true;
                         }
                     break;
+                    case '👋':
+                        if (response.id === 24) {
+                            addCoins();
+                        }
+                    break;
                     case '🐈':
+                        if (response.id === 25) {
+                            subCoins();
+                        }
                         if (response.id === 26) {
                             embed.setFields([
                                 {
@@ -333,6 +361,30 @@ module.exports = {
                             button1 = new ButtonBuilder().setCustomId('🔪').setLabel('🔪').setStyle(ButtonStyle.Primary);
                             button2 = new ButtonBuilder().setCustomId('🎣').setLabel('🎣').setStyle(ButtonStyle.Primary);
                             addButtons = true;
+                        }
+                    break;
+                    case '🧚':
+                        if (response.id === 29) {
+                            subCoins();               
+                        }
+                        if (response.id === 30) {
+                            addCoins();
+                        }
+                    break;
+                    case '🔪':
+                        if (response.id === 31) {
+                            subCoins();
+                        }
+                        if (response.id === 32) {
+                            addCoins();
+                        }
+                    break;
+                    case '🎣':
+                        if (response.id === 33) {
+                            subCoins();
+                        }
+                        if (response.id === 34) {
+                            addCoins();
                         }
                     break;
                 }
