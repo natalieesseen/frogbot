@@ -1,10 +1,13 @@
 const { SlashCommandBuilder, EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, Events } = require("discord.js");
+const { adventureUser } = require('../database')
 
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('adventure')
         .setDescription('Start a new adventure 🏕️'),
     async execute(interaction) {
+        adventureUser.create({ id: interaction.user.id })
+
         const button1 = new ButtonBuilder().setCustomId('🏕️').setLabel('🏕️').setStyle(ButtonStyle.Primary);
         const button2 = new ButtonBuilder().setCustomId('🔍').setLabel('🔍').setStyle(ButtonStyle.Primary);
         const row = new ActionRowBuilder().addComponents(button1, button2)
@@ -25,7 +28,6 @@ module.exports = {
                 inline: true
             }
         ]);
-
         await interaction.reply({ embeds: [embed], components: [row] })
     }
 };

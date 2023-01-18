@@ -1,13 +1,16 @@
 const { Events, EmbedBuilder, ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
-const { User } = require('../database');
+const { User, adventureUser } = require('../database');
 
 // listener for adventure buttons
 module.exports = {
     name: Events.InteractionCreate,
     async execute(interaction) {
+
+        let commandUser = await adventureUser.findOne({ where: { id: interaction.user.id }});
+
         if(interaction.isButton()){
+            if (commandUser) { 
             let choice = interaction.customId;
-            let commandUser = interaction.user.id;
 
             let coins = Math.floor(Math.random() * 101);
             let getUser = await User.findOne({ where: { id: interaction.user.id }});
@@ -124,7 +127,6 @@ module.exports = {
             .setColor("93C98F")
             .setDescription(response.text)
 
-            if (interaction.user.id === commandUser) {
             try {
                 switch (choice) {
                     case '🏕️':
@@ -395,6 +397,7 @@ module.exports = {
                     await interaction.reply({ embeds: [embed], components: [row] })
                 } else {
                     await interaction.reply({ embeds: [embed]})
+                    await adventureUser.destroy({ where: { id: interaction.user.id }});
                 }
 
             } catch (error) {
@@ -404,5 +407,5 @@ module.exports = {
             console.log('invalid user')
         }
     }
-    },
+    }
 };

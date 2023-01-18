@@ -54,4 +54,14 @@ module.exports.petCooldown = database.define('pet_cooldown', {
         unique: true,
     },
     expiry: Sequelize.BIGINT,
-})
+}
+);
+
+module.exports.adventureUser = database.define('adventure_user', {
+    id: {
+        primaryKey: true,
+        type: Sequelize.STRING,
+        unique: true,
+    }
+}
+);

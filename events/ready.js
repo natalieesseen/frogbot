@@ -1,4 +1,4 @@
-const { User, UserItems, CurrencyShop, petCooldown } = require('../database')
+const { User, UserItems, CurrencyShop, petCooldown, adventureUser } = require('../database')
 
 module.exports = {
 	name: 'ready',
@@ -8,6 +8,7 @@ module.exports = {
 		await UserItems.sync();
 		await CurrencyShop.sync();
 		await petCooldown.sync();
+		await adventureUser.sync();
 		console.log('database synced')
 		console.log(`Ready! Logged in as ${client.user.tag}`);
 	}, 
