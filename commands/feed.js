@@ -16,17 +16,43 @@ module.exports = {
         const itemName = interaction.options.getString('item');
         const findItem = await UserItems.findOne({ where: { user_id: interaction.user.id, item: { [Op.like]: itemName }} });
         
+        let coins = Math.floor(Math.random() * 51);
+        let shouldAdd = Math.random() >= 0.5;
+
+        let embed = new EmbedBuilder()
+        .setColor('93C98F');
+
+        if (shouldAdd) {
+            getUser.update(
+                { balance: getUser.balance + coins },
+                { where: { id: interaction.user.id }}
+            )
+            embed
+            .setTitle('Frog liked it!')
+            .setDescription(`Frog liked it! And gives you ${coins} coins as a thank you! Ribbit!`)
+        } else {
+            getUser.update(
+                { balance: getUser.balance - coins },
+                { where: { id: interaction.user.id }}
+            )
+            embed
+            .setTitle('Frog did not like it...')
+            .setDescription(`And demands you give him ${coins} coins in compensation!`)
+        }
+        
+    
         if(!findItem) {
             if (!item) {
-                await interaction.reply({
-                    embeds: [
-                        new EmbedBuilder()
-                        .setColor('93C98F')
-                        .setTitle('That item does not exist!')
-                        .setDescription('Make sure you spelled it correctly ~ Ribbit.')
-                    ]
-                })
+                embed
+                .setTitle('That item does not exist!')
+                .setDescription('Make sure you spelled it correctly ~ Ribbit.')
             } 
+        }
+
+        if(findItem.item === 'Frog trinket') {
+            embed
+            .setTitle(`That's not food!`)
+            .setDescription(`Are you really going to feed Frog the token of your cool and sparkly discord role? You can't do that.`)
         }
 
         await UserItems.update(
@@ -38,32 +64,6 @@ module.exports = {
             where: { amount: 0 }
         })
 
-        let coins = Math.floor(Math.random() * 51);
-        let shouldAdd = Math.random() >= 0.5;
-        let response = '';
-
-        if (shouldAdd) {
-            getUser.update(
-                { balance: getUser.balance + coins },
-                { where: { id: interaction.user.id }}
-            )
-
-            response = `Frog liked it! And gives you ${coins} coins as a thank you! Ribbit!`
-        } else {
-            getUser.update(
-                { balance: getUser.balance - coins },
-                { where: { id: interaction.user.id }}
-            )
-            response = `Frog did not like it... And demands you give him ${coins} coins in compensation!`
-        }
-
-        await interaction.reply({
-            embeds: [
-                new EmbedBuilder()
-                .setColor('93C98F')
-                .setTitle(`You feed frog ${findItem.item}`)
-                .setDescription(response)
-            ]
-        })
+        await interaction.reply({ embeds: [embed]})
 	},
 };
