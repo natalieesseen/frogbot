@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const { Op } = require('sequelize');
-const { guildId } = require('../config.json')
 const { User, UserItems, CurrencyShop } = require('../database');
+const { discordRole } = require('../config.json')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -43,7 +43,7 @@ module.exports = {
 
         if (item.name === 'Frog trinket') {
             let guild = interaction.channel.guild;
-            let role = guild.roles.cache.find(r => r.name === "cool role");
+            let role = guild.roles.cache.find(r => r.name === discordRole);
             let member = guild.members.cache.get(interaction.user.id);
             if (member.roles.cache.has(role.id)) {
                 interaction.reply({
