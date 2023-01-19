@@ -6,7 +6,13 @@ module.exports = {
         .setName('adventure')
         .setDescription('Start a new adventure 🏕️'),
     async execute(interaction) {
-        adventureUser.create({ id: interaction.user.id })
+        let commandUser = adventureUser.findOne({ where: { id: interaction.user.id }});;
+
+        if (!commandUser) {
+            adventureUser.create({ id: interaction.user.id })
+        } else {
+            adventureUser.upsert({ id: interaction.user.id })
+        }
 
         const button1 = new ButtonBuilder().setCustomId('🏕️').setLabel('🏕️').setStyle(ButtonStyle.Primary);
         const button2 = new ButtonBuilder().setCustomId('🔍').setLabel('🔍').setStyle(ButtonStyle.Primary);
