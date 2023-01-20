@@ -58,7 +58,7 @@ module.exports = {
                 '💧':
                 [
                     { id: 17, text: "You give the flower some water you find in a pond nearby. Turns out the water was contaminated. The flower withers. You head back to camp empty-handed and your adventure ends." },
-                    { id: 18, text: "You give the flower some water you find in a pond nearby. It begins to magically sparkle! The forest spirits rewards you. You head back to camp where frog is waiting; you tell him about your adventure!" } 
+                    { id: 18, text: `You give the flower some water you find in a pond nearby. It begins to magically sparkle! The forest spirits rewards you with ${coins} coins You head back to camp where frog is waiting; you tell him about your adventure!` } 
                 ],
                 '🌳':
                 [
@@ -78,7 +78,7 @@ module.exports = {
                 '🐈':
                 [
                     { id: 25, text: `The cat leads you back to camp where you find Frog waiting. Frog is a bit disappointed you went on an adventure without him. You give Frog ${coins} coins as an apology.` },
-                    { id: 26, text: "You decide to run. You arrive at a magical pond. What do you do?" } 
+                    { id: 26, text: "The cat leads you deeper into the woods. You arrive at a magical pond. What do you do?" } 
                 ],
                 '🥤':
                 [
@@ -281,6 +281,11 @@ module.exports = {
                             addButtons = true;
                         }
                     break;
+                    case '💧':
+                        if (response.id === 18) {
+                            addCoins();
+                        }
+                    break;
                     case '🌳':
                         if (response.id === 20) {
                             embed.setFields([
@@ -394,17 +399,17 @@ module.exports = {
                 let row = new ActionRowBuilder().addComponents(button1, button2);
 
                 if (addButtons) {
-                    await interaction.reply({ embeds: [embed], components: [row] })
+                    await interaction.reply({ embeds: [embed], components: [row] });
                 } else {
-                    await interaction.reply({ embeds: [embed]})
+                    await interaction.reply({ embeds: [embed]});
                     await adventureUser.destroy({ where: { id: interaction.user.id }});
                 }
 
             } catch (error) {
-            console.log(error)
+            console.log(error);
         }
         } else {
-            console.log('invalid user')
+            console.log('invalid user');
         }
     }
     }
