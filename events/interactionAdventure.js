@@ -12,7 +12,7 @@ module.exports = {
             if (commandUser) { 
             let choice = interaction.customId;
 
-            let coins = Math.floor(Math.random() * 101);
+            let coins = Math.floor(Math.random() * 101) + 10;
             let getUser = await User.findOne({ where: { id: interaction.user.id }});
             if (!getUser) { getUser = await User.create({ id: interaction.user.id, balance: 0 }) };
 
