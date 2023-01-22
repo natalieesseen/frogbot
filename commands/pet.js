@@ -43,6 +43,8 @@ module.exports = {
             .setTitle('Thank you for the pets!')
             .setDescription(`Forg gives you ${coinsEarned} coins in return 🐸`);
 
-		await interaction.deferReply({ embeds: [embed]});
+		await interaction.deferReply();
+		await wait(4000);
+		await interaction.editReply({ embeds: [embed]});
 	},
 };
